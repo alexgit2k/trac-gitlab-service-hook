@@ -60,8 +60,12 @@ Branch: %s[[BR]]"""
 			
 			jsondata = json.loads(data)
 			self.env.log.debug('got json')
-			reponame = jsondata['project']['path_with_namespace']
-			reponame = reponame.replace('main/', '') # Special for us
+			try:
+				reponame = jsondata['project']['path_with_namespace']
+				reponame = reponame.replace('main/', '') # Special for us
+			except KeyError:
+				self.env.log.debug('Required keys in JSON not found!')
+				return False
 
 			# Push
 			if (jsondata['object_kind'] == 'push'):
